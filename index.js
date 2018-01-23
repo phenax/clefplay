@@ -9,10 +9,16 @@ const PORT = process.env.PORT || 8080;
 
 // Request logging
 app.use(async (ctx, next) => {
-	const start = Date.now();
+
+	const start = process.hrtime();
+
+	// Call the required callback
 	await next();
-	const ms = Date.now() - start;
-	console.log(`${ctx.method} ${ctx.url} - ${ms}`);
+
+	const diff = process.hrtime(start);
+	const diffNumber = (diff[0] * 1000) + (diff[1] / 1000000);
+
+	console.log(`${ctx.method} ${ctx.url} - ${Math.round(diffNumber * 1000) / 1000}ms`);
 });
 
 

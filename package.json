@@ -24,6 +24,7 @@
     "koa": "^2.4.1",
     "preact": "^8.2.7",
     "preact-render-to-string": "^3.7.0",
+    "preact-router": "^2.6.0",
     "unistore": "^3.0.3"
   }
 }
