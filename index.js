@@ -9,10 +9,10 @@ const PORT = process.env.PORT || 8080;
 
 // Request logging
 app.use(async (ctx, next) => {
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-  console.log(`${ctx.method} ${ctx.url} - ${ms}`);
+	const start = Date.now();
+	await next();
+	const ms = Date.now() - start;
+	console.log(`${ctx.method} ${ctx.url} - ${ms}`);
 });
 
 
@@ -23,4 +23,5 @@ app.use(async ctx => {
 	ctx.body = _resp.render();
 });
 
-app.listen(PORT, () => console.log(`Server has started on ${PORT}`));
+app.listen(PORT, () =>
+	console.log(`Server has started on ${PORT}`));

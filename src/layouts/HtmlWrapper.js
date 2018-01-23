@@ -1,6 +1,5 @@
 import {h} from 'preact';
 
-
 export default ({ title = 'Title', head = null, children }) => (
 	<html>
 		<head>
