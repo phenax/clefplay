@@ -17,15 +17,19 @@
   "license": "Apache-2.0",
   "dependencies": {
     "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
     "chalk": "^2.3.0",
     "koa": "^2.4.1",
+    "koa-route": "^3.2.0",
+    "koa-static": "^4.0.2",
     "preact": "^8.2.7",
     "preact-render-to-string": "^3.7.0",
     "preact-router": "^2.6.0",
-    "unistore": "^3.0.3"
+    "unistore": "^3.0.3",
+    "webpack": "^3.10.0"
   }
 }

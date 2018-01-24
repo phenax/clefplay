@@ -1,16 +1,15 @@
 
 const chalk = require('chalk');
 const Koa = require('koa');
-require('babel-core/register')();
+const koaStatic = require('koa-static');
 
-const ResponseBuilder = require('./src/main').default;
 const log = require('./src/libs/log');
+
+require('babel-core/register')();
+const ResponseBuilder = require('./src/main').default;
 
 const PORT = process.env.PORT || 8080;
 const app = new Koa();
-
-log.warn('Hello world');
-log.error('Shit fuck');
 
 // Request logging
 app.use(async (ctx, next) => {
@@ -30,6 +29,11 @@ app.use(async (ctx, next) => {
 	log(`${method} ${url} - ${responseTime}`);
 });
 
+app.use(koaStatic('public', {
+	maxage: (process.env.NODE_END === 'production')? 60*60*24*10: 0,
+	gzip: true,
+	br: true,
+}));
 
 app.use(async ctx => {
 

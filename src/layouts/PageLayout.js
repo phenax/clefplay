@@ -1,7 +1,8 @@
-import { h } from 'preact';
+import { h, Component } from 'preact';
 
 import HtmlWrapper from '../layouts/HtmlWrapper';
 
+// TODO: Set it to init state after store is written
 const initialState = {};
 
 const Head = () => (
@@ -10,13 +11,33 @@ const Head = () => (
 	</div>
 );
 
-export default ({ head = (<Head />), children, ...props }) => (
-	<HtmlWrapper head={head} {...props}>
-		<div id='appRoot'>
-			{children}
-		</div>
-		<script dangerouslySetInnerHTML={{ __html: `
-			window.__INITIAL_STATE = ${initialState};
-		` }} />
-	</HtmlWrapper>
-);
+export default class PageLayout extends Component {
+
+	componentDidMount() {
+		if (this.props.title) {
+			document.title = this.props.title;
+		}
+	}
+
+	render() {
+		const { head = <Head />, children, ...props } = this.props;
+
+		if(process.env.ENV === 'browser') {
+			return <div>{children}</div>;
+		}
+		
+		return (
+			<HtmlWrapper head={head} {...props}>
+
+				<div id='appRoot'>{children}</div>
+
+				<script dangerouslySetInnerHTML={{
+					__html: `window.__INITIAL_STATE = ${JSON.stringify(initialState)};`
+				}} />
+
+				<script src={'/js/script.js'} async defer />
+
+			</HtmlWrapper>
+		);
+	}
+}
