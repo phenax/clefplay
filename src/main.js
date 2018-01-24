@@ -7,7 +7,7 @@ import ComponentRoot from './ComponentRoot';
 export default ctx => {
 	
 	const Component = ComponentRoot;
-	const vdom = <ComponentRoot url={ctx.path} />
+	const vdom = <ComponentRoot url={ctx.path} />;
 
 	const self = {
 		Component,

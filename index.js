@@ -1,11 +1,16 @@
 
+const chalk = require('chalk');
 const Koa = require('koa');
-const app = new Koa();
-
 require('babel-core/register')();
+
 const ResponseBuilder = require('./src/main').default;
+const log = require('./src/libs/log');
 
 const PORT = process.env.PORT || 8080;
+const app = new Koa();
+
+log.warn('Hello world');
+log.error('Shit fuck');
 
 // Request logging
 app.use(async (ctx, next) => {
@@ -18,7 +23,11 @@ app.use(async (ctx, next) => {
 	const diff = process.hrtime(start);
 	const diffNumber = (diff[0] * 1000) + (diff[1] / 1000000);
 
-	console.log(`${ctx.method} ${ctx.url} - ${Math.round(diffNumber * 1000) / 1000}ms`);
+	const method = chalk.green(`[${ctx.method}]`);
+	const url = chalk.bold(ctx.url);
+	const responseTime = chalk.blue(`${Math.round(diffNumber * 1000) / 1000}ms`);
+
+	log(`${method} ${url} - ${responseTime}`);
 });
 
 
@@ -30,4 +39,4 @@ app.use(async ctx => {
 });
 
 app.listen(PORT, () =>
-	console.log(`Server has started on ${PORT}`));
+	log(`Server has started on ${PORT}`));

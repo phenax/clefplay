@@ -10,7 +10,7 @@ const Head = () => (
 	</div>
 );
 
-export default ({ ...props, head = (<Head />), children }) => (
+export default ({ head = (<Head />), children, ...props }) => (
 	<HtmlWrapper head={head} {...props}>
 		<div id='appRoot'>
 			{children}
