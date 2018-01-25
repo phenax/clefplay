@@ -1,9 +1,8 @@
+
 import { h, Component } from 'preact';
 
 import HtmlWrapper from '../layouts/HtmlWrapper';
-
-// TODO: Set it to init state after store is written
-const initialState = {};
+import { getStore } from '../store';
 
 const Head = () => (
 	<div>
@@ -32,7 +31,7 @@ export default class PageLayout extends Component {
 				<div id='appRoot'>{children}</div>
 
 				<script dangerouslySetInnerHTML={{
-					__html: `window.__INITIAL_STATE = ${JSON.stringify(initialState)};`
+					__html: `window.__INITIAL_STATE = ${JSON.stringify(getStore().getState())};`
 				}} />
 
 				<script src={'/js/script.js'} async defer />

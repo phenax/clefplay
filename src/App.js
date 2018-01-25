@@ -1,15 +1,15 @@
 
-import {h} from 'preact';
+import { h } from 'preact';
 import { Router } from 'preact-router';
 import { Provider } from 'unistore/preact';
 
-import store from './store';
+import { getStore } from './store';
 
 import HomePage from './pages/Home';
 const Test = () => <div>Hello</div>;
 
 export default ({ url = null }) => (
-	<Provider store={store}>
+	<Provider store={getStore()}>
 		<Router url={url}>
 			<HomePage path={'/'} />
 			<Test path={'/test'} />

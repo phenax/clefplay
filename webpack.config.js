@@ -13,7 +13,7 @@ const webpackConfig= {
 	target: 'web',
 
 	entry: {
-		script: [ 'client' ].map(k => _s(k)),
+		script: [ 'main.client' ].map(k => _s(k)),
 		// serviceworker: [ _s('serviceworker') ],
 	},
 

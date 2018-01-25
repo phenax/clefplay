@@ -6,7 +6,7 @@ const koaStatic = require('koa-static');
 const log = require('./src/libs/log');
 
 require('babel-core/register')();
-const ResponseBuilder = require('./src/main').default;
+const ResponseBuilder = require('./src/main.server.js').default;
 
 const PORT = process.env.PORT || 8080;
 const app = new Koa();

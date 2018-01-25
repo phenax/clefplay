@@ -1,7 +1,7 @@
 
 import {h, render} from 'preact';
 
-import ComponentRoot from './ComponentRoot';
+import App from './App';
 
 const $appRoot = document.getElementById('appRoot');
 
@@ -10,4 +10,4 @@ while ($appRoot.firstChild)
 	$appRoot.removeChild($appRoot.firstChild);
 
 // Render component
-render(<ComponentRoot />, $appRoot);
+render(<App />, $appRoot);
