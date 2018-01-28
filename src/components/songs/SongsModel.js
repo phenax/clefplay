@@ -4,14 +4,22 @@ import mongoose from 'mongoose';
 const NAME_INVALID = { isValid: false, status: 442, message: 'Name needs to be atleast 4 characters long' };
 
 export const schema = mongoose.Schema({
+
 	name: String,
+
 	url: String,
+
 	description: Number,
+
 	rating: Number,
+
 	uid: mongoose.Schema.Types.ObjectId,
+
 }, { collection: 'songs' });
 
-Object.assign(schema.methods, {
+
+class SongsEntity {
+
 	check() {
 		// const song = this;
 
@@ -20,10 +28,8 @@ Object.assign(schema.methods, {
 
 		return { isValid: true };
 	}
-});
+}
 
-Object.assign(schema.statics, {
-	// Table methods
-});
+schema.loadClass(SongsEntity);
 
-export default mongoose.model('Songs', schema);
+export default mongoose.model('Song', schema);

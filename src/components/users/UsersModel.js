@@ -7,11 +7,16 @@ const EMAIL_INVALID = { isValid: false, status: 443, message: 'Email address is 
 import mongoose from 'mongoose';
 
 export const schema = mongoose.Schema({
+
 	name: String,
+
 	email: String,
+
 }, { collection: 'users' });
 
-Object.assign(schema.methods, {
+
+class UsersEntity {
+
 	check() {
 
 		const user = this;
@@ -24,10 +29,8 @@ Object.assign(schema.methods, {
 
 		return { isValid: true };
 	}
-});
+}
 
-Object.assign(schema.statics, {
-	// Table methods
-});
+schema.loadClass(UsersEntity);
 
 export default mongoose.model('User', schema);
