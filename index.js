@@ -2,6 +2,7 @@
 require('dotenv').config();
 
 const chalk = require('chalk');
+const mongoose = require('mongoose');
 const Koa = require('koa');
 const koaStatic = require('koa-static');
 
@@ -48,6 +49,20 @@ app.use(async ctx => {
 	ctx.body = _resp.render();
 });
 
+
 // Start server
 app.listen(PORT, () =>
 	log(`Server has started on ${PORT}`));
+
+
+// Connect to database
+const connectionUrl =
+	process.env.DB_USERNAME?
+		`mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}`:
+		`mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`;
+
+mongoose.connect(connectionUrl);
+mongoose.connection
+	.on('error', e => console.error('connection error:', e))
+	.on('open', () => log(`Connected to database(${connectionUrl})`));
+
