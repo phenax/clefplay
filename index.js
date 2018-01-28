@@ -1,4 +1,6 @@
 
+require('dotenv').config()
+
 const chalk = require('chalk');
 const Koa = require('koa');
 const koaStatic = require('koa-static');
@@ -8,7 +10,7 @@ const log = require('./src/libs/log');
 require('babel-core/register')();
 const ResponseBuilder = require('./src/main.server.js').default;
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 const app = new Koa();
 
 // Request logging
