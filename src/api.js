@@ -1,5 +1,10 @@
 
 import router from 'koa-route';
+import glob from 'glob';
+import path from 'path';
+
+const CONTROLLER_SUFFIX = 'Ctrlr';
+
 
 /**
  * Resource decorator
@@ -28,10 +33,10 @@ export const Action =
 
 export class Controller {
 
+	respond(ctx, status, data, message) {
+		ctx.body = { status, message, ...data };
+	}
 }
-
-
-
 
 
 
@@ -40,9 +45,10 @@ export class Controller {
 /**
  * List of all controllers
  */
-export const controllers = [
-	require('./components/users/UsersCtrlr').default,
-];
+export const controllers =
+	glob.sync(`${path.resolve('./src/components')}/**/*${CONTROLLER_SUFFIX}.js`)
+		.map(file => require(file).default);
+
 
 export default (app) => {
 
