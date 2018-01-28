@@ -2,9 +2,6 @@
 import createStore from 'unistore';
 import { connect as unistoreConnect } from 'unistore/preact';
 
-import allActions from './actions';
-
-
 // Store
 let store;
 
@@ -42,13 +39,3 @@ export const refreshStore = () => {
 	return store;
 };
 
-/**
- * Unistore connect function wrapper
- * @param {String|Object}    state    The state you want passed
- * @param {Function}         actions  The actions you want passed(All actions by default) [TODO: Remove after test]
- * 
- * @return {Function}        This function wraps around the react component
- */
-export const connect =
-	(state, actions = allActions) =>
-		unistoreConnect(state, actions);
