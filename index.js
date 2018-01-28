@@ -5,15 +5,20 @@ const chalk = require('chalk');
 const mongoose = require('mongoose');
 const Koa = require('koa');
 const koaStatic = require('koa-static');
+const bodyParser = require('koa-bodyparser');
 
 const log = require('./src/libs/log');
 
+// Babel transpilation for the required modules
 require('babel-core/register')();
 const ResponseBuilder = require('./src/main.server.js').default;
 const router = require('./src/api').default;
 
 const PORT = process.env.PORT;
 const app = new Koa();
+
+// Parse body
+app.use(bodyParser());
 
 // Request logging
 app.use(async (ctx, next) => {

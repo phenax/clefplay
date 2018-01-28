@@ -2,10 +2,10 @@
 import router from 'koa-route';
 
 /**
- * Controller decorator
+ * Resource decorator
  * @param {String} name  Resource name
  */
-export const Controller =
+export const Resource =
 	name =>
 		_class => { _class.resourceName = name; };
 
@@ -20,10 +20,21 @@ export const Action =
 		(_, __, fnMeta) => {
 			Object.assign(fnMeta.value, {
 				isAction: true,
-				actionName: (name !== null)? name: fnMeta.value.name,
+				actionName: (name !== null)? name: '/' + fnMeta.value.name,
 				actionMethod: method.toLowerCase(),
 			});
 		};
+
+
+export class Controller {
+
+}
+
+
+
+
+
+
 
 
 /**

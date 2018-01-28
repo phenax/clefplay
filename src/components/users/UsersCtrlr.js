@@ -1,19 +1,26 @@
 
-import { Controller, Action } from '../../api';
+import { Controller, Action, Resource } from '../../api';
 
 import User from './UsersModel';
 
-@Controller('users')
-export default class Users {
+@Resource('users')
+export default class Users extends Controller {
 
-	@Action('/add')
+	@Action(null, 'post')
 	add(ctx) {
-		const user = new User({
-			name: 'Akshay',
-			email: 'some@email.com',
-		});
-		// TODO: Save
-		ctx.body = { user };
+
+		const userData = ctx.request.body;
+
+		const user = new User(userData);
+
+		return user.save()
+			.then(user => ctx.body = { user })
+			.catch(e => {
+				ctx.body = {
+					message: e.message,
+					status: 500,
+				};
+			});
 	}
 
 	@Action('/')
@@ -23,4 +30,9 @@ export default class Users {
 			.catch(console.error);
 	}
 
+	@Action()
+	deleteAll(ctx) {
+		return User.deleteMany({})
+			.then(d => ctx.body = d);
+	}
 }
