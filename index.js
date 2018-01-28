@@ -1,5 +1,5 @@
 
-require('dotenv').config()
+require('dotenv').config();
 
 const chalk = require('chalk');
 const Koa = require('koa');
@@ -9,6 +9,7 @@ const log = require('./src/libs/log');
 
 require('babel-core/register')();
 const ResponseBuilder = require('./src/main.server.js').default;
+const router = require('./src/api').default;
 
 const PORT = process.env.PORT;
 const app = new Koa();
@@ -31,18 +32,22 @@ app.use(async (ctx, next) => {
 	log(`${method} ${url} - ${responseTime}`);
 });
 
+// Server static files
 app.use(koaStatic('public', {
 	maxage: (process.env.NODE_END === 'production')? 60*60*24*10: 0,
 	gzip: true,
 	br: true,
 }));
 
+// Initialize router
+router(app);
+
+// For everything else, render html
 app.use(async ctx => {
-
 	const _resp = ResponseBuilder(ctx);
-
 	ctx.body = _resp.render();
 });
 
+// Start server
 app.listen(PORT, () =>
 	log(`Server has started on ${PORT}`));
