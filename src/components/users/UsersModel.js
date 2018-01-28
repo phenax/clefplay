@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 export const schema = mongoose.Schema({
 	name: String,
 	email: String,
-});
+}, { collection: 'users' });
 
 Object.assign(schema.methods, {
 	// Entity methods

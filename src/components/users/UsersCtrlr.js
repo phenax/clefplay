@@ -6,7 +6,7 @@ import User from './UsersModel';
 @Controller('users')
 export default class Users {
 
-	@Action('add')
+	@Action('/add')
 	add(ctx) {
 		const user = new User({
 			name: 'Akshay',
@@ -16,7 +16,7 @@ export default class Users {
 		ctx.body = { user };
 	}
 
-	@Action('')
+	@Action('/')
 	index(ctx) {
 		return User.find({})
 			.then(users => ctx.body = { users })

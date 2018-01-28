@@ -50,7 +50,7 @@ export default (app) => {
 			.forEach(action => {
 
 				const { actionName, actionMethod } = action;
-				const url = `/${resourceName}${actionName ? '/' + actionName: ''}`;
+				const url = `/${resourceName}${actionName}`;
 
 				// Initialize route
 				app.use(router[actionMethod](url, action));
