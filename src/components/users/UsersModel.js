@@ -26,9 +26,8 @@ Object.assign(schema.methods, {
 	}
 });
 
-
-const model = mongoose.model('User', schema);
-
-export default Object.assign(model, {
+Object.assign(schema.statics, {
 	// Table methods
 });
+
+export default mongoose.model('User', schema);

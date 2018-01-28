@@ -1,46 +1,46 @@
 
 import { Controller, Action, Resource } from '../../api';
 
-import User from './UsersModel';
+import Song from './SongsModel';
 
-@Resource('users')
-export default class UsersController extends Controller {
+@Resource('songs')
+export default class SongsController extends Controller {
 
 	@Action(null, 'post')
 	add(ctx) {
 
-		const user = new User(ctx.request.body);
+		const song = new Song(ctx.request.body);
 
 		// Validate before saving
-		const res = user.check();
+		const res = song.check();
 		if (!res.isValid) {
 			delete res.isValid;
-			return ctx.body = { ...res, user: null };
+			return ctx.body = { ...res, song: null };
 		}
 
-		return user.save()
-			.then(user => ctx.body = {
+		return song.save()
+			.then(song => ctx.body = {
 				status: 200,
 				message: 'Saved',
-				user,
+				song,
 			})
 			.catch(e => ctx.body = {
 				status: 500,
 				message: e.message,
-				user: null,
+				song: null,
 			});
 	}
 
 	@Action('/')
 	index(ctx) {
-		return User.find({})
-			.then(users => ctx.body = { users })
+		return Song.find({})
+			.then(songs => ctx.body = { songs })
 			.catch(console.error);
 	}
 
 	@Action()
 	deleteAll(ctx) {
-		return User.deleteMany({})
+		return Song.deleteMany({})
 			.then(d => ctx.body = d);
 	}
 }
