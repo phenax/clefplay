@@ -1,10 +1,10 @@
 
-const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-const NAME_INVALID = { isValid: false, status: 442, message: 'Name needs to be atleast 4 characters long' };
-const EMAIL_INVALID = { isValid: false, status: 443, message: 'Email address is invalid' };
-
 import mongoose from 'mongoose';
+
+import { ModelEntity } from '../../api';
+
+// Email validation regex(Replaced the over complicated one)
+const EMAIL_REGEX = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/;
 
 export const schema = mongoose.Schema({
 
@@ -12,25 +12,29 @@ export const schema = mongoose.Schema({
 
 	email: String,
 
-}, { collection: 'users' });
+}, { collection: 'users', toObject: { virtuals: true } });
 
 
-class UsersEntity {
+schema.virtual('songs', {
+	ref: 'Song',
+	localField: '_id',
+	foreignField: 'user',
+});
+
+schema.loadClass(class extends ModelEntity {
 
 	check() {
 
 		const user = this;
 
 		if (!user.name || user.name.length < 4)
-			return NAME_INVALID;
+			return { isValid: false, field: 'name', message: 'Name needs to be atleast 4 characters long' };
 
 		if (!user.email || !EMAIL_REGEX.test(user.email))
-			return EMAIL_INVALID;
+			return { isValid: false, field: 'email', message: 'Email address is invalid' };
 
 		return { isValid: true };
 	}
-}
-
-schema.loadClass(UsersEntity);
+});
 
 export default mongoose.model('User', schema);

@@ -2,6 +2,7 @@
 import { Controller, Action, Resource } from '../../api';
 
 import Song from './SongsModel';
+import User from '../users/UsersModel';
 
 @Resource('songs')
 export default class SongsController extends Controller {
@@ -11,19 +12,21 @@ export default class SongsController extends Controller {
 
 		const song = new Song(ctx.request.body);
 
-		// Validate before saving
-		const res = song.check();
-		if (!res.isValid) {
-			delete res.isValid;
-			return ctx.body = { ...res, song: null };
-		}
+		if(!this.validateEntity(ctx, song)) return;
 
-		return song.save()
-			.then(song => ctx.body = {
+		// TODO: Change this to authenticated user when auth is in
+		return User.findOne({})
+			.then(user => {
+				song.user = user;
+				return song.save();
+			})
+			.then(song => this.respond(ctx, {
 				status: 200,
 				message: 'Saved',
-				song,
-			})
+				data: {
+					song: song.normalize()
+				},
+			}))
 			.catch(e => ctx.body = {
 				status: 500,
 				message: e.message,
@@ -34,8 +37,19 @@ export default class SongsController extends Controller {
 	@Action('/')
 	index(ctx) {
 		return Song.find({})
-			.then(songs => ctx.body = { songs })
-			.catch(console.error);
+			.populate('user')
+			.then(songs => this.respond(ctx, {
+				status: 200,
+				message: 'Success',
+				data: {
+					songs: songs.map(s => s.normalize())
+				},
+			}))
+			.catch(e => this.respond(ctx, {
+				status: e.statusCode || 500,
+				message: e.message || 'Something went wrong',
+				data: { songs: [] },
+			}));
 	}
 
 	@Action()

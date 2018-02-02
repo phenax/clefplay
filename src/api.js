@@ -1,3 +1,4 @@
+/* @flow */
 
 import router from 'koa-route';
 import glob from 'glob';
@@ -5,14 +6,20 @@ import path from 'path';
 
 const CONTROLLER_SUFFIX = 'Ctrlr';
 
+type Response = {
+	status: number,
+	data: Object,
+	message: string,
+};
+
 
 /**
  * Resource decorator
  * @param {String} name  Resource name
  */
 export const Resource =
-	name =>
-		_class => { _class.resourceName = name; };
+	(name: string) =>
+		(_class: Function) => { _class.resourceName = name; };
 
 /**
  * Action(Controller method) decorator
@@ -21,8 +28,8 @@ export const Resource =
  * @param {*} method   Router method
  */
 export const Action =
-	(name = null, method = 'get') =>
-		(_, __, fnMeta) => {
+	(name: ?string = null, method: string = 'get') =>
+		(_: any, __: any, fnMeta: Function) => {
 			Object.assign(fnMeta.value, {
 				isAction: true,
 				actionName: (name !== null)? name: '/' + fnMeta.value.name,
@@ -33,17 +40,59 @@ export const Action =
 
 export class Controller {
 
-	respond(ctx, status, data, message) {
+	get statuses() { return {
+		OK: 200,
+		NOT_FOUND: 404,
+		ERROR: 500,
+		INVALID_FIELD: 444,
+	}; }
+
+	respond(ctx: Object, { status, data, message }: Response) {
+
+		ctx.status = status;
+		ctx.message = message;
+
 		ctx.body = { status, message, ...data };
+	}
+
+	// Validate entity
+	validateEntity(ctx: Object, entity: Object) {
+
+		const res = entity.check();
+
+		if (!res.isValid) {
+			delete res.isValid;
+
+			this.respond(ctx, {
+				status: this.statuses.INVALID_FIELD,
+				message: res.message,
+				data: { field: res.field },
+			});
+
+			return false;
+		}
+
+		return true;
+	}
+}
+
+
+
+export class ModelEntity {
+
+	normalize() {
+
+		const entity = this.toObject();
+
+		return { ...entity };
 	}
 }
 
 
 
 
-
 /**
- * List of all controllers
+ * List of all controllers(Glob it all out of the components folder)
  */
 export const controllers =
 	glob.sync(`${path.resolve('./src/components')}/**/*${CONTROLLER_SUFFIX}.js`)
@@ -70,7 +119,7 @@ export default (app) => {
 				const url = `/${resourceName}${actionName}`;
 
 				// Initialize route
-				app.use(router[actionMethod](url, action));
+				app.use(router[actionMethod](url, action.bind(resource)));
 			});
 	});
 };

@@ -1,6 +1,5 @@
 
 import createStore from 'unistore';
-import { connect as unistoreConnect } from 'unistore/preact';
 
 // Store
 let store;

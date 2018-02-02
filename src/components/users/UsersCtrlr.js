@@ -11,31 +11,39 @@ export default class UsersController extends Controller {
 
 		const user = new User(ctx.request.body);
 
-		// Validate before saving
-		const res = user.check();
-		if (!res.isValid) {
-			delete res.isValid;
-			return ctx.body = { ...res, user: null };
-		}
+		if(!this.validateEntity(ctx, user)) return;
 
 		return user.save()
-			.then(user => ctx.body = {
+			.then(user => this.respond(ctx, {
 				status: 200,
 				message: 'Saved',
-				user,
-			})
-			.catch(e => ctx.body = {
+				data: {
+					user: user.normalize()
+				},
+			}))
+			.catch(e => this.respond(ctx, {
 				status: 500,
 				message: e.message,
-				user: null,
-			});
+				data: { user: null },
+			}));
 	}
 
 	@Action('/')
 	index(ctx) {
 		return User.find({})
-			.then(users => ctx.body = { users })
-			.catch(console.error);
+			.populate('songs')
+			.then(users => this.respond(ctx, {
+				status: 200,
+				message: 'Success',
+				data: {
+					users: users.map(u => u.normalize())
+				},
+			}))
+			.catch(e => this.respond(ctx, {
+				status: e.statusCode || 500,
+				message: e.message || 'Something went wrong',
+				data: { users: [] },
+			}));
 	}
 
 	@Action()
