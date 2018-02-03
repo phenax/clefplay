@@ -6,7 +6,7 @@ let store;
 
 // Create new initial state
 export const getInitialState = () => ({
-	count: 0,
+	song: null,
 });
 
 /**

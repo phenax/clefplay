@@ -15,7 +15,7 @@ type Response = {
 
 /**
  * Resource decorator
- * @param {String} name  Resource name
+ * @param {string} name  Resource name
  */
 export const Resource =
 	(name: string) =>
@@ -24,8 +24,8 @@ export const Resource =
 /**
  * Action(Controller method) decorator
  * 
- * @param {*} name     Action name
- * @param {*} method   Router method
+ * @param {?string} name     Action name
+ * @param {string} method   Router method
  */
 export const Action =
 	(name: ?string = null, method: string = 'get') =>
@@ -75,8 +75,6 @@ export class Controller {
 		return true;
 	}
 }
-
-
 
 export class ModelEntity {
 
