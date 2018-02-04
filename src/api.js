@@ -25,15 +25,15 @@ export const Resource =
  * Action(Controller method) decorator
  * 
  * @param {?string} name     Action name
- * @param {string} method   Router method
+ * @param {string|Array<string>} method   Router method
  */
 export const Action =
-	(name: ?string = null, method: string = 'get') =>
+	(name: ?string = null, method: any = 'get') =>
 		(_: any, __: any, fnMeta: Function) => {
 			Object.assign(fnMeta.value, {
 				isAction: true,
 				actionName: (name !== null)? name: '/' + fnMeta.value.name,
-				actionMethod: method.toLowerCase(),
+				actionMethods: (Array.isArray(method)? method: [method]).map(m => m.toLowerCase()),
 			});
 		};
 
@@ -44,10 +44,10 @@ export class Controller {
 		OK: 200,
 		NOT_FOUND: 404,
 		ERROR: 500,
-		INVALID_FIELD: 444,
+		BAD_REQUEST: 400,
 	}; }
 
-	respond(ctx: Object, { status, data, message }: Response) {
+	respond(ctx: Object, { status, data = {}, message }: Response) {
 
 		ctx.status = status;
 		ctx.message = message;
@@ -64,7 +64,7 @@ export class Controller {
 			delete res.isValid;
 
 			this.respond(ctx, {
-				status: this.statuses.INVALID_FIELD,
+				status: this.statuses.BAD_REQUEST,
 				message: res.message,
 				data: { field: res.field },
 			});
@@ -113,11 +113,13 @@ export default (app) => {
 			.filter(action => action.isAction)
 			.forEach(action => {
 
-				const { actionName, actionMethod } = action;
+				const { actionName, actionMethods } = action;
 				const url = `/${resourceName}${actionName}`;
 
 				// Initialize route
-				app.use(router[actionMethod](url, action.bind(resource)));
+				actionMethods.forEach(method => {
+					app.use(router[method](url, action.bind(resource)));
+				})
 			});
 	});
 };

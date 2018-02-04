@@ -1,11 +1,12 @@
 
+// Load the .env environment variables
 require('dotenv').config();
 
 const chalk = require('chalk');
 const mongoose = require('mongoose');
 const Koa = require('koa');
 const koaStatic = require('koa-static');
-const bodyParser = require('koa-bodyparser');
+const koaBody = require('koa-body');
 
 const log = require('./src/libs/log');
 
@@ -18,7 +19,7 @@ const PORT = process.env.PORT;
 const app = new Koa();
 
 // Parse body
-app.use(bodyParser());
+app.use(koaBody({ multipart: true }));
 
 // Request logging
 app.use(async (ctx, next) => {
@@ -34,13 +35,14 @@ app.use(async (ctx, next) => {
 	const method = chalk.green(`[${ctx.method}]`);
 	const url = chalk.bold(ctx.url);
 	const responseTime = chalk.blue(`${Math.round(diffNumber * 1000) / 1000}ms`);
+	const responseStatus = ctx.response.status;
 
-	log(`${method} ${url} - ${responseTime}`);
+	log(`${method} ${url} - ${responseStatus} ${responseTime}`);
 });
 
 // Server static files
 app.use(koaStatic('public', {
-	maxage: (process.env.NODE_END === 'production')? 60*60*24*10: 0,
+	maxage: (process.env.NODE_ENV === 'production')? 60*60*24*10: 0,
 	gzip: true,
 	br: true,
 }));

@@ -21,6 +21,12 @@ export const schema = mongoose.Schema({
 
 schema.loadClass(class extends ModelEntity {
 	check() {
+		const song = this;
+
+		if((song.name || '').length < 5) {
+			return { field: 'name', isValid: false, message: 'Invalid name' };
+		}
+
 		return { isValid: true };
 	}
 });

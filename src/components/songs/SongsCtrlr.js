@@ -34,6 +34,31 @@ export default class SongsController extends Controller {
 			});
 	}
 
+
+	@Action(null, 'post')
+	upload(ctx) {
+
+		const data = ctx.request.body;
+
+		if(data.files && data.fields) {
+
+			const songFile = data.files.song;
+
+			const song = new Song({
+				name: data.fields.name,
+
+			});
+
+			// Validate song
+			if(!this.validateEntity(ctx, song)) return;
+
+			ctx.body = song;
+		} else {
+			this.respond(ctx, { status: 404, message: 'Not found' });
+		}
+	}
+
+
 	@Action('/')
 	index(ctx) {
 		return Song.find({})
