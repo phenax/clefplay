@@ -16,9 +16,16 @@ export default class SongsController extends Controller {
 
 			const songFile = data.files.song;
 
-			const song = new Song({
-				name: data.fields.name,
-			});
+			const result = Song.checkFile(songFile);
+			if(result) {
+				return this.respond(ctx, {
+					status: this.status.BAD_REQUEST,
+					message: result.message,
+					data: { type: result.type }, 
+				});
+			}
+
+			const song = new Song({ name: data.fields.name });
 
 			// Validate song
 			if(!this.validateEntity(ctx, song)) return;

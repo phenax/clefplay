@@ -41,7 +41,7 @@ export const Action =
 
 export class Controller {
 
-	get statuses() { return {
+	get status() { return {
 		OK: 200,
 		NOT_FOUND: 404,
 		ERROR: 500,
@@ -65,7 +65,7 @@ export class Controller {
 			delete res.isValid;
 
 			this.respond(ctx, {
-				status: this.statuses.BAD_REQUEST,
+				status: this.status.BAD_REQUEST,
 				message: res.message,
 				data: { field: res.field },
 			});

@@ -17,7 +17,23 @@ export const schema = mongoose.Schema({
 
 }, { collection: 'songs', toObject: { virtuals: true } });
 
-schema.loadClass(class extends ModelEntity {
+
+// Model and entity methods
+schema.loadClass(class SongsEntity extends ModelEntity {
+
+	static supportedFormats = [ 'image/png' ];
+
+	static checkFile(file) {
+
+		if(file.size > 12 * 1024 * 1024) {
+			return { type: 'size', message: 'The file size is too large' };
+		}
+
+		if(SongsEntity.supportedFormats.includes(file.type)) {
+			return { type: 'format', message: 'The file format is not supported' };
+		}
+	}
+
 	check() {
 		const song = this;
 
@@ -28,5 +44,6 @@ schema.loadClass(class extends ModelEntity {
 		return { isValid: true };
 	}
 });
+
 
 export default mongoose.model('Song', schema);
