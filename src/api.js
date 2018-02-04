@@ -76,11 +76,17 @@ export class Controller {
 		return true;
 	}
 
-	moveFile(source, destination) {
-		const $sourceFile = fs.createReadStream(source);
-		const $destFile = fs.createWriteStream(destination);
+	moveFileToUploads(source, destination) {
+		const sourceFile$ = fs.createReadStream(source);
+		const destFile$ = fs.createWriteStream(`uploads/${destination}`);
 
-		return $sourceFile.pipe($destFile);
+		return sourceFile$.pipe(destFile$);
+	}
+
+	streamUploadedFile(ctx, filepath, type = 'text/plain') {
+		ctx.type = type;
+		const file$ = fs.createReadStream(`uploads/${filepath}`);
+		ctx.body = file$;
 	}
 }
 

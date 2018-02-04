@@ -21,7 +21,7 @@ export const schema = mongoose.Schema({
 // Model and entity methods
 schema.loadClass(class SongsEntity extends ModelEntity {
 
-	static supportedFormats = [ 'image/png' ];
+	static supportedFormats = [ 'audio/mp3' ];
 
 	static checkFile(file) {
 
@@ -29,7 +29,7 @@ schema.loadClass(class SongsEntity extends ModelEntity {
 			return { type: 'size', message: 'The file size is too large' };
 		}
 
-		if(SongsEntity.supportedFormats.includes(file.type)) {
+		if(!SongsEntity.supportedFormats.includes(file.type)) {
 			return { type: 'format', message: 'The file format is not supported' };
 		}
 	}

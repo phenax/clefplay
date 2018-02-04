@@ -31,7 +31,7 @@ export default class SongsController extends Controller {
 			if(!this.validateEntity(ctx, song)) return;
 
 			// Upload file
-			this.moveFile(songFile.path, `uploads/${song.id}`);
+			this.moveFileToUploads(songFile.path, `songs/${song.id}`);
 
 			// Save song entity with authenticated user
 			return User.findOne({})
@@ -54,6 +54,25 @@ export default class SongsController extends Controller {
 		} else {
 			this.respond(ctx, { status: 404, message: 'Not found' });
 		}
+	}
+
+	@Action('/listen/:songId.mp3')
+	listen(ctx, songId) {
+		return Song.findOne({ _id: songId })
+			.then(song => {
+				if(song) {
+					this.streamUploadedFile(ctx, `songs/${song.id}`, 'audio/mp3');
+				} else {
+					this.respond(ctx, {
+						status: this.status.NOT_FOUND,
+						message: 'Song not found',
+					});
+				}
+			})
+			.catch(e => this.respond(ctx, {
+				status: this.status.ERROR,
+				message: e.message,
+			}));
 	}
 
 

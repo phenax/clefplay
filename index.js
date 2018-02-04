@@ -10,8 +10,29 @@ const koaBody = require('koa-body');
 
 const log = require('./src/libs/log');
 
+
 // Babel transpilation for the required modules
-require('babel-core/register')();
+require('babel-core/register')({
+	"presets": [
+		["env", {
+			"targets": {
+				"node": "current"
+			}
+		}],
+		"flow",
+	],
+	"plugins": [
+		"transform-decorators-legacy",
+		[
+			"transform-react-jsx",
+			{
+				"pragma": "h"
+			}
+		]
+	]
+});
+// require('babel-polyfill');
+
 const ResponseBuilder = require('./src/main.server.js').default;
 const router = require('./src/api').default;
 
