@@ -9,11 +9,9 @@ export const schema = mongoose.Schema({
 
 	name: String,
 
-	url: String,
-
-	description: Number,
-
 	rating: Number,
+
+	createAt: { type: Date, default: Date.now },
 
 	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 

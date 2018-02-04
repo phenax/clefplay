@@ -3,6 +3,7 @@
 import router from 'koa-route';
 import glob from 'glob';
 import path from 'path';
+import fs from 'fs';
 
 const CONTROLLER_SUFFIX = 'Ctrlr';
 
@@ -73,6 +74,13 @@ export class Controller {
 		}
 
 		return true;
+	}
+
+	moveFile(source, destination) {
+		const $sourceFile = fs.createReadStream(source);
+		const $destFile = fs.createWriteStream(destination);
+
+		return $sourceFile.pipe($destFile);
 	}
 }
 
