@@ -4,7 +4,7 @@
   "description": "__",
   "main": "index.js",
   "scripts": {
-    "test": "__"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -40,5 +40,20 @@
     "preact-router": "^2.6.0",
     "unistore": "^3.0.3",
     "webpack": "^3.10.0"
+  },
+  "devDependencies": {
+    "babel-jest": "^22.2.2",
+    "jest": "^22.3.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ]
   }
 }
