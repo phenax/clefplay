@@ -46,6 +46,7 @@
     "jest": "^22.3.0"
   },
   "jest": {
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
