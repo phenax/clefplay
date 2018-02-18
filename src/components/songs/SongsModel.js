@@ -34,6 +34,8 @@ schema.loadClass(class SongsEntity extends ModelEntity {
 		}
 	}
 
+	get url() { return `/songs/listen/${this.id}.mp3`; }
+
 	check() {
 		const song = this;
 

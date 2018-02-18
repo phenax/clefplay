@@ -83,10 +83,68 @@ export class Controller {
 		return sourceFile$.pipe(destFile$);
 	}
 
-	streamUploadedFile(ctx, filepath, type = 'text/plain') {
+	sendUploadedFile(ctx, filepath, type = 'text/plain') {
 		ctx.type = type;
-		const file$ = fs.createReadStream(`uploads/${filepath}`);
-		ctx.body = file$;
+		ctx.body = fs.createReadStream(`uploads/${filepath}`);
+	}
+
+	streamUploadedFile(ctx, filename, type = 'text/plain') {
+
+		const headers = {
+			'Accept-Ranges': 'bytes',
+			'Cache-Control': 'no-cache',
+			'Access-Control-Allow-Headers': 'range, accept-encoding',
+			'Access-Control-Allow-Origin': '*',
+		};
+
+		// Not asking for ranged response
+		if(!ctx.headers.range) {
+			ctx.res.writeHead(200, headers);
+			return this.sendUploadedFile(ctx, filename, type);
+		}
+
+		const filePath = `uploads/${filename}`;
+
+		let fileStat;
+		try {
+			fileStat = fs.statSync(filePath);
+		} catch(e) {
+			return this.respond(ctx, { status: ERROR, message: 'File not found' });
+		}
+
+		const range = (ctx.headers.range || '')
+			.replace(/bytes=/, '')
+			.split('-')
+			.map(num => parseInt(num, 10))
+			.reduce((carry, num, i) => ({
+				...carry,
+				[(i === 0)? 'start': 'end']: num,
+			}), {});
+
+		if(!range.start) range.start = 0;
+		if(!range.end) range.end = fileStat.size;
+
+		if(range.end > fileStat.size || range.start < 0 || range.end < range.start) {
+			return this.respond(ctx, {
+				status: 416,
+				message: 'Requested Range Not Satisfiable',
+			})
+		}
+
+		let statusCode = 200;
+		if(range.start === 0 && range.end === fileStat.size)
+			statusCode = 200;
+
+		const contentLength = range.end - range.start;
+
+		ctx.type = type;
+		ctx.res.writeHead(statusCode, {
+			...headers,
+			'Content-Length': contentLength,
+            'Content-Range': 'bytes ' + range.start + '-' + range.end + '/' + fileStat.size,
+		});
+
+		ctx.body = fs.createReadStream(filePath, range);
 	}
 }
 

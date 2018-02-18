@@ -61,7 +61,7 @@ export default class SongsController extends Controller {
 		return Song.findOne({ _id: songId })
 			.then(song => {
 				if(song) {
-					this.streamUploadedFile(ctx, `songs/${song.id}`, 'audio/mp3');
+					this.streamUploadedFile(ctx, `songs/${song.id}`, 'audio/mpeg');
 				} else {
 					this.respond(ctx, {
 						status: this.status.NOT_FOUND,

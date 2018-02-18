@@ -25,6 +25,36 @@ export default class PageLayout extends Component {
 		return (
 			<HtmlWrapper head={head} {...props}>
 
+				<style dangerouslySetInnerHTML={{ __html: `
+					.buffered {
+					  height: 20px;
+					  position: relative;
+					  background: #888;
+					  width: 300px;
+					}
+
+					#buffered-amount {
+					  display: block;
+					  height: 100%;
+					  background-color: #333;
+					  width: 0;
+					}
+
+					.progress {
+					  margin-top: -20px;
+					  height: 20px;  
+					  position: relative;
+					  width: 300px;
+					}
+
+					#progress-amount {
+					  display: block;
+					  height: 100%;
+					  background-color: #51e980;
+					  width: 0;
+					}
+				` }} />
+
 				<div id='appRoot'>{children}</div>
 
 				<script dangerouslySetInnerHTML={{
