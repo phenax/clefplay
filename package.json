@@ -4,7 +4,8 @@
   "description": "__",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "codecov": "codecov -t e0d37fb4-9b0c-4ca8-bde3-e5e80b45c556"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "babel-jest": "^22.2.2",
+    "codecov": "^3.0.0",
     "jest": "^22.3.0"
   },
   "jest": {
